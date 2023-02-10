@@ -251,9 +251,10 @@ export default function IndexPage() {
             Binge Time
           </h1>
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
-            Find tv series/movies similar to your favorite. Enter a show you
-            like and country you live in so we can check if it is available on
-            Netflix.
+            Discover similar tv shows and films tailored to your tastes. Simply
+            enter the title of a program you enjoy, along with your current
+            country of residence, and we'll verify its availability on Netflix
+            for you.
           </p>
           <div className="mx-auto opacity-20"></div>
 
