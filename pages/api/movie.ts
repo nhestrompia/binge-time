@@ -35,7 +35,7 @@ export default async function handler(
   const response = await fetch(
     `https://streaming-availability.p.rapidapi.com/search/pro?country=${country}&service=netflix&type=${
       movie ? "movie" : "series"
-    }&keyword=${searchTitle}&output_language=en&language=en`,
+    }&order_by=original_title&page=1&desc=true&keyword=${title}&output_language=en`,
     options
   ).then((response) => response.json())
 
