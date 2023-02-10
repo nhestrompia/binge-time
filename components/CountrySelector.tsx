@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+
 import React, { MutableRefObject, useEffect, useState } from "react"
 import { COUNTRIES } from "@/utils/countries"
 import { AnimatePresence, motion } from "framer-motion"
