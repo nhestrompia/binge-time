@@ -247,7 +247,7 @@ export default function IndexPage() {
             Binge Time
           </h1>
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
-            Find tv series/movies similar to your favorite. Enter one show you
+            Find tv series/movies similar to your favorite. Enter a show you
             like and country you live in so we can check if it is available on
             Netflix.
           </p>
