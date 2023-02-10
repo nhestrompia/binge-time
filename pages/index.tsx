@@ -211,6 +211,10 @@ export default function IndexPage() {
   console.log("moviesss", movies)
   // console.log("moviesss netf", movies[0].streamingInfo.netflix.tr.link)
 
+  useEffect(() => {
+    setValues({ title: "", country: "ar" })
+  }, [])
+
   const handleChange = (val: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prevState) => ({
       ...prevState,
