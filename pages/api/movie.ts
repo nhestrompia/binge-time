@@ -33,7 +33,7 @@ export default async function handler(
   console.log("search", searchTitle)
 
   const response = await fetch(
-    `https://streaming-availability.p.rapidapi.com/search/basic?country=${country}&service=netflix&type=${
+    `https://streaming-availability.p.rapidapi.com/search/pro?country=${country}&service=netflix&type=${
       movie ? "movie" : "series"
     }&keyword=${searchTitle}&output_language=en&language=en`,
     options
