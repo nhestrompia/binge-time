@@ -8,6 +8,7 @@ import { useTheme } from "next-themes"
 import { siteConfig } from "@/config/site"
 import { CountrySelector } from "@/components/CountrySelector"
 import { Item } from "@/components/Item"
+import { Icons } from "@/components/icons"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import {
@@ -42,9 +43,9 @@ export default function IndexPage() {
       let prompt: string
 
       if (isMovie) {
-        prompt = `Can you recommend me 3 movies similar to ${values.title}? Please just give their names as a response, don't give their release date or year they came out`
+        prompt = `Can you recommend me 3 movies similar to ${values.title}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
       } else {
-        prompt = `Can you recommend me 3 tv series similar to ${values.title}? Please just give their names as a response, don't give their release date or year they came out`
+        prompt = `Can you recommend me 3 tv series similar to ${values.title}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
       }
 
       const response = await fetch("/api/recommendation", {
@@ -240,7 +241,7 @@ export default function IndexPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="container grid items-center justify-center w-full max-w-xl gap-6 pt-4 pb-8 md:-mt-6">
+      <section className="container grid items-center justify-center w-full max-w-xl gap-6 pt-4 pb-8 md:-mt-4">
         <div className="flex max-w-[980px] flex-col items-center gap-4">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
             Binge Time
@@ -293,7 +294,7 @@ export default function IndexPage() {
             Movie
           </button>
         </label>
-        <form className="flex flex-col w-full gap-4 mt-4">
+        <form className="flex flex-col w-full gap-4 mt-6">
           <Input
             className="w-full md:max-w-2xl"
             type="text"
@@ -319,10 +320,10 @@ export default function IndexPage() {
         </form>
         {!isLoading && movies !== undefined && movies.length > 0 && (
           <div className="w-full">
-            <h1 className="text-xl">
+            {/* <h1 className="text-xl">
               Here are some {isMovie ? "movies" : "tv series"} similar to{" "}
               {message} :
-            </h1>
+            </h1> */}
             <ul className="mt-8 space-y-4 list-disc">
               {movies.map((movie, key) => {
                 return (
@@ -332,6 +333,20 @@ export default function IndexPage() {
                 )
               })}
             </ul>
+            <div className="flex justify-center mt-6">
+              <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
+                <div className="flex flex-row space-x-4">
+                  <p>Project</p>
+                  <Link href={"https://github.com/nhestrompia/binge-time"}>
+                    <Icons.gitHub className="w-4 h-4 mt-0.5  dark:text-[#3F0071]" />
+                  </Link>
+                  <p>made by</p>
+                  <Link href={"https://twitter.com/nhestrompia"}>
+                    <Icons.twitter className="w-4 h-4 mt-0.5 dark:text-[#3F0071]" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         )}
         {isLoading && (
@@ -343,6 +358,20 @@ export default function IndexPage() {
             </span>
           </div>
         )}
+        {/* <div className="sticky flex justify-center top-full">
+          <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
+            <div className="flex flex-row space-x-4">
+              <p>Project</p>
+              <Link href={"https://github.com/nhestrompia/binge-time"}>
+                <Icons.gitHub className="w-4 h-4 mt-0.5  dark:text-[#3F0071]" />
+              </Link>
+              <p>made by</p>
+              <Link href={"https://twitter.com/nhestrompia"}>
+                <Icons.twitter className="w-4 h-4 mt-0.5 dark:text-[#3F0071]" />
+              </Link>
+            </div>
+          </div>
+        </div> */}
       </section>
     </Layout>
   )
