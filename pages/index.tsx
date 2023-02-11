@@ -253,7 +253,7 @@ export default function IndexPage() {
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
             Discover similar tv shows and films tailored to your tastes. Simply
             enter the title of a program you enjoy, along with your current
-            country of residence, and we'll verify its availability on Netflix
+            country of residence, and we will verify its availability on Netflix
             for you.
           </p>
           <div className="mx-auto opacity-20"></div>
