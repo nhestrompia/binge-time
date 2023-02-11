@@ -94,10 +94,10 @@ export default function IndexPage() {
               movie.originalTitle.toLowerCase()
             )
           })
-          console.log(
-            "🚀 ~ file: index.tsx:97 ~ movieInfo ~ movieInfo",
-            movieInfo
-          )
+          // console.log(
+          //   "🚀 ~ file: index.tsx:97 ~ movieInfo ~ movieInfo",
+          //   movieInfo
+          // )
           if (movieInfo !== undefined) {
             console.log(
               "🚀 ~ file: index.tsx:90 ~ movieInfo ~ movieInfo",
@@ -146,8 +146,7 @@ export default function IndexPage() {
             movieObject = movieObject.map((movie) => {
               console.log("within movieObject", movie)
               if (
-                movie.title.toLowerCase() ==
-                movieInfo.originalTitle.toLowerCase()
+                movie.title.toLowerCase() == movieObject[i].title.toLowerCase()
               ) {
                 return {
                   ...movie,
@@ -225,7 +224,7 @@ export default function IndexPage() {
   const fixTitle = () => {
     const newTitle = values.title
     const words = newTitle.split(" ")
-
+    console.log(words)
     for (let i = 0; i < words.length; i++) {
       words[i] = words[i][0].toUpperCase() + words[i].substr(1)
     }
@@ -325,10 +324,10 @@ export default function IndexPage() {
         </form>
         {!isLoading && movies !== undefined && movies.length > 0 && (
           <div className="w-full">
-            {/* <h1 className="text-xl">
-              Here are some {isMovie ? "movies" : "tv series"} similar to{" "}
+            <h1 className="text-xl">
+              Here are some {isMovie ? "Movies" : "TV series"} similar to{" "}
               {message} :
-            </h1> */}
+            </h1>
             <ul className="mt-8 space-y-4 list-disc">
               {movies.map((movie, key) => {
                 return (
