@@ -208,8 +208,9 @@ export default function IndexPage() {
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
             Tired of endless scrolling? Let us help you find your next
             binge-worthy show. Enter your favorite show and your country, and
-            we'll give you three tailored recommendations. Bonus: we'll check if
-            they're on Netflix in your area. Start exploring now!
+            we&apos;ll give you three tailored recommendations. Bonus:
+            we&apos;ll check if they&apos;re on Netflix in your area. Start
+            exploring now!
           </p>
           <div className="mx-auto opacity-20"></div>
 
