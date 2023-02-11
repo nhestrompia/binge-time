@@ -56,7 +56,6 @@ export default function IndexPage() {
       })
       const recommendationData = await response.json()
 
-      // setMovies(recommendationData.recommendations)
       let movieObject = []
 
       const newMovies = recommendationData.recommendations.map((movie) => {
@@ -66,7 +65,6 @@ export default function IndexPage() {
         }
         movieObject.push(tempObject)
       })
-      console.log("movie data", movieObject)
       setMovies(movieObject)
       const country = values.country
 
@@ -79,37 +77,16 @@ export default function IndexPage() {
             movie: isMovie,
           }),
         })
-        console.log("🚀 ~ file: index.tsx:74 ~ submit ~ movieGet", movieGet)
         const responseData = await movieGet.json()
-        console.log(
-          "🚀 ~ file: index.tsx:79 ~ submit ~ responseData",
-          responseData
-        )
-
         if (responseData.results.length > 0) {
           const movieInfo = responseData.results.find((movie) => {
-            console.log("movie within find", movieObject[i].title.toLowerCase())
             return (
               movieObject[i].title.toLowerCase() ===
               movie.originalTitle.toLowerCase()
             )
           })
-          // console.log(
-          //   "🚀 ~ file: index.tsx:97 ~ movieInfo ~ movieInfo",
-          //   movieInfo
-          // )
           if (movieInfo !== undefined) {
-            console.log(
-              "🚀 ~ file: index.tsx:90 ~ movieInfo ~ movieInfo",
-              movieInfo
-            )
-            console.log(
-              "🚀 ~ file: index.tsx:90 ~ link",
-              movieInfo.streamingInfo.netflix[country]
-            )
-
             movieObject = movieObject.map((movie) => {
-              console.log("within movieObject", movie)
               if (
                 movie.title.toLowerCase() ==
                 movieInfo.originalTitle.toLowerCase()
@@ -122,10 +99,6 @@ export default function IndexPage() {
               }
               return movie
             })
-            console.log(
-              "🚀 ~ file: index.tsx:103 ~ movieObject ~ movieObject",
-              movieObject
-            )
           } else {
             const newTitle = movieObject[i].title.split(/[ ,]+/)
 
@@ -144,7 +117,6 @@ export default function IndexPage() {
             const searchTitle = newArr.join("").toLowerCase()
 
             movieObject = movieObject.map((movie) => {
-              console.log("within movieObject", movie)
               if (
                 movie.title.toLowerCase() == movieObject[i].title.toLowerCase()
               ) {
@@ -155,10 +127,6 @@ export default function IndexPage() {
               }
               return movie
             })
-            console.log(
-              "🚀 ~ file: index.tsx:156 ~ movieObject=movies.map ~ movieObject",
-              movieObject
-            )
           }
         } else {
           const newTitle = movieObject[i].title.split(/[ ,]+/)
@@ -176,13 +144,7 @@ export default function IndexPage() {
           })
 
           const searchTitle = newArr.join("").toLowerCase()
-          console.log(
-            "🚀 ~ file: index.tsx:180 ~ submit ~ searchTitle",
-            searchTitle
-          )
-
           movieObject = movieObject.map((movie) => {
-            console.log("within movieObject", movie)
             if (
               movie.title.toLowerCase() == movieObject[i].title.toLowerCase()
             ) {
@@ -193,10 +155,6 @@ export default function IndexPage() {
             }
             return movie
           })
-          console.log(
-            "🚀 ~ file: index.tsx:185 ~ movieObject=movies.map ~ movieObject",
-            movieObject
-          )
         }
       }
       fixTitle()
@@ -207,8 +165,6 @@ export default function IndexPage() {
       console.error(err)
     }
   }
-  console.log("moviesss", movies)
-  // console.log("moviesss netf", movies[0].streamingInfo.netflix.tr.link)
 
   useEffect(() => {
     setValues({ title: "", country: "ar" })
@@ -250,10 +206,10 @@ export default function IndexPage() {
             Binge Time
           </h1>
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
-            Discover similar tv shows and films tailored to your tastes. Simply
-            enter the title of a program you enjoy, along with your current
-            country of residence, and we will verify its availability on Netflix
-            for you.
+            Tired of endless scrolling? Let us help you find your next
+            binge-worthy show. Enter your favorite show and your country, and
+            we'll give you three tailored recommendations. Bonus: we'll check if
+            they're on Netflix in your area. Start exploring now!
           </p>
           <div className="mx-auto opacity-20"></div>
 
