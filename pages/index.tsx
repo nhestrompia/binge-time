@@ -280,9 +280,9 @@ export default function IndexPage() {
         </form>
         {!isLoading && movies !== undefined && movies.length > 0 && (
           <div className="w-full">
-            <h1 className="text-xl">
+            <h1 className="text-base md:text-lg">
               Here are some {isMovie ? "Movies" : "TV series"} similar to{" "}
-              {message} :
+              <span className="font-semibold">{message} </span> :
             </h1>
             <ul className="mt-8 space-y-4 list-disc">
               {movies.map((movie, key) => {

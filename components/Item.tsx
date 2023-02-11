@@ -20,7 +20,7 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
   } else {
     return (
       <div className="flex items-center justify-between w-full gap-8">
-        <h1 className="text-xl font-bold leading-tight tracking-tighter">
+        <h1 className="text-base font-bold leading-tight tracking-tighter md:text-xl">
           {movie.title}
         </h1>
         {/* <Image
