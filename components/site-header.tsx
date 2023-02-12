@@ -10,7 +10,7 @@ export function SiteHeader() {
   // const ThemeToggle = dynamic(() => import("/components/theme-toggle"))
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-transparent ">
+    <header className="top-0 z-40 w-full bg-transparent ">
       <div className="container flex items-center h-16 space-x-4 sm:space-x-0">
         {/* <div className="flex justify-center w-screen mt-10 ml-10">
           <div className="flex items-center justify-center px-4 py-2 mb-5 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
