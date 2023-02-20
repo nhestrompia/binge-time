@@ -22,7 +22,14 @@ import { Input } from "@/components/ui/input"
 interface MovieData {
   title: string
   link?: string
+  imdb?: string
+  image?: string
+  imdbLink?: string
+  plot?: string
+  year?: string
 }
+
+//TODO add another button so they can request different recommendations than current ones.
 
 export default function IndexPage() {
   const countryRef = createRef<HTMLDivElement>()
@@ -37,15 +44,16 @@ export default function IndexPage() {
   const submit = async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
+      const movieTitle = values.title
       setIsLoading(true)
       setMovies([])
 
       let prompt: string
 
       if (isMovie) {
-        prompt = `Can you recommend me 3 movies similar to ${values.title}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
       } else {
-        prompt = `Can you recommend me 3 tv series similar to ${values.title}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
       }
 
       const response = await fetch("/api/recommendation", {
@@ -62,10 +70,16 @@ export default function IndexPage() {
         let tempObject = {
           title: movie,
           link: "",
+          imdb: "",
+          image: "",
+          imdbLink: "",
+          plot: "",
+          year: "",
         }
         movieObject.push(tempObject)
       })
       setMovies(movieObject)
+
       const country = values.country
 
       for (let i = 0; i < movieObject.length; i++) {
@@ -91,15 +105,69 @@ export default function IndexPage() {
                 movie.title.toLowerCase() ==
                 movieInfo.originalTitle.toLowerCase()
               ) {
+                console.log("poster URL", movieInfo)
+                console.log("poster data", movieInfo.posterURLs)
                 const movieLink = movieInfo.streamingInfo.netflix[country]
+                const poster = movieInfo.posterURLs.original
+                console.log(
+                  "🚀 ~ file: index.tsx:102 ~ movieObject=movieObject.map ~ poster:",
+                  poster
+                )
+
+                const rating = movieInfo.imdbRating.toString()
+                // console.log(
+                //   "🚀 ~ file: index.tsx:102 ~ movieObject=movieObject.map ~ rating:",
+                //   rating
+                // )
+
+                const ratingArr = Array.from(rating)
+                // console.log(
+                //   "🚀 ~ file: index.tsx:105 ~ movieObject=movieObject.map ~ ratingArr:",
+                //   ratingArr
+                // )
+
+                const fixedRating = ratingArr[0] + "." + ratingArr[1]
+                // console.log(
+                //   "🚀 ~ file: index.tsx:108 ~ movieObject=movieObject.map ~ fixedRating:",
+                //   fixedRating
+                // )
                 return {
                   ...movie,
                   link: movieLink.link,
+                  imdb: fixedRating,
+                  image: poster,
+                  plot: movieInfo.overview,
+                  imdbLink: `https://www.imdb.com/title/${movieInfo.imdbID}`,
+                  year: `${movieInfo.firstAirYear}-${movieInfo.lastAirYear}`,
                 }
               }
               return movie
             })
           } else {
+            const movieGet = await fetch("/api/imdb-check", {
+              method: "POST",
+              body: JSON.stringify({
+                title: movieObject[i].title.toLowerCase(),
+              }),
+            })
+            const responseData = await movieGet.json()
+            if (responseData !== undefined) {
+              console.log(
+                "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
+                responseData
+              )
+              movieObject[i].imdb = responseData.imdbRating
+              movieObject[i].image = responseData.Poster
+              movieObject[i].plot = responseData.Plot
+              ;(movieObject[
+                i
+              ].imdbLink = `https://www.imdb.com/title/${responseData.imdbID}`),
+                (movieObject[i].year = responseData.Year)
+            } else {
+              movieObject[i].imdb = "N/A"
+              movieObject[i].image = ""
+            }
+
             const newTitle = movieObject[i].title.split(/[ ,]+/)
 
             const newArr = newTitle.map((title, key) => {
@@ -129,6 +197,30 @@ export default function IndexPage() {
             })
           }
         } else {
+          const movieGet = await fetch("/api/imdb-check", {
+            method: "POST",
+            body: JSON.stringify({
+              title: movieObject[i].title.toLowerCase(),
+            }),
+          })
+          const responseData = await movieGet.json()
+          if (responseData !== undefined) {
+            console.log(
+              "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
+              responseData
+            )
+            movieObject[i].imdb = responseData.imdbRating
+            movieObject[i].image = responseData.Poster
+            movieObject[i].plot = responseData.Plot
+            movieObject[
+              i
+            ].imdbLink = `https://www.imdb.com/title/${responseData.imdbID}`
+            movieObject[i].year = responseData.Year
+          } else {
+            movieObject[i].imdb = "N/A"
+            movieObject[i].image = ""
+          }
+
           const newTitle = movieObject[i].title.split(/[ ,]+/)
 
           const newArr = newTitle.map((title, key) => {
@@ -157,7 +249,7 @@ export default function IndexPage() {
           })
         }
       }
-      fixTitle()
+      fixTitle(movieTitle)
       setMovies(movieObject)
 
       setIsLoading(false)
@@ -177,8 +269,8 @@ export default function IndexPage() {
     }))
   }
 
-  const fixTitle = () => {
-    const newTitle = values.title
+  const fixTitle = (name) => {
+    const newTitle = name
     const words = newTitle.split(" ")
     console.log(words)
     for (let i = 0; i < words.length; i++) {
@@ -238,8 +330,8 @@ export default function IndexPage() {
             onClick={() => setIsMovie(false)}
             className={`rounded-l-md  w-fit tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
-                ? "bg-gray-500 dark:hover:bg-[#8170c4] dark:hover:text-[#c3fcf2] dark:bg-[#c3fcf2] hover:bg-gray-800  text-gray-50 dark:text-[#3F0071]"
-                : "bg-black dark:bg-[#22003d] dark:text-[#c3fcf2] scale-105  text-white "
+                ? "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
+                : "bg-black dark:bg-[#22003d] dark:text-white scale-105  text-white "
             }`}
           >
             Tv Series
@@ -248,8 +340,8 @@ export default function IndexPage() {
             onClick={() => setIsMovie(true)}
             className={`rounded-r-md tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
-                ? "bg-black dark:bg-[#22003d] dark:text-[#c3fcf2] text-white scale-105 "
-                : "bg-gray-500 dark:hover:bg-[#8170c4] dark:hover:text-[#c3fcf2] dark:bg-[#c3fcf2] hover:bg-gray-800  text-gray-50 dark:text-[#3F0071] "
+                ? "bg-black dark:bg-[#22003d] dark:text-white scale-105  text-white "
+                : "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
             }`}
           >
             Movie
@@ -259,6 +351,7 @@ export default function IndexPage() {
           <Input
             className="w-full md:max-w-2xl"
             type="text"
+            required={true}
             onChange={handleChange}
             placeholder={`${isMovie ? "Movie" : "Tv series"} you like ${
               isMovie ? "(e.g. Contact)" : "(e.g. The Office)"

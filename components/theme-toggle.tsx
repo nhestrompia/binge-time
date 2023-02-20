@@ -36,7 +36,7 @@ export function ThemeToggle() {
         </Button>
       ) : (
         <Button onClick={() => setTheme("light")} variant="ghost" size="sm">
-          <Icons.moon className="w-6 h-6 dark:text-[#c3fcf2]" />
+          <Icons.moon className="w-6 h-6 dark:text-white" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       )}
