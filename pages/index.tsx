@@ -31,7 +31,7 @@ interface MovieData {
 
 interface PrevRecommendation {
   title: string
-  recommendations: string[]
+  recommendations: MovieData[]
 }
 
 //TODO add another button so they can request different recommendations than current ones.
@@ -57,11 +57,23 @@ export default function IndexPage() {
       let prompt: string
 
       if (prevTitle && movieTitle === prevTitle.title) {
-        const recommendedTitles = prevTitle.recommendations.join(",")
+        const tempTitleArr = []
+        prevTitle.recommendations.map((movie) => {
+          tempTitleArr.push(movie.title)
+        })
+        const recommendedTitles = tempTitleArr.join(",")
+        console.log(
+          "🚀 ~ file: index.tsx:61 ~ submit ~ recommendedTitles:",
+          recommendedTitles
+        )
 
         if (isMovie) {
           prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
         } else {
+          console.log(
+            "🚀 ~ file: index.tsx:66 ~ submit ~ recommendedTitles:",
+            recommendedTitles
+          )
           prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
         }
       } else {
@@ -272,14 +284,14 @@ export default function IndexPage() {
       fixTitle(movieTitle)
       setMovies(movieObject)
 
-      const recommendedTitles = []
-      movieObject.forEach((movie) => {
-        recommendedTitles.push(movie.title)
-      })
+      // const recommendedTitles = []
+      // movieObject.forEach((movie) => {
+      //   recommendedTitles.push(movie.title)
+      // })
 
       setPrevTitle((prevState) => ({
         ...prevState,
-        recommendations: [...prevState.recommendations, ...recommendedTitles],
+        recommendations: [...prevState.recommendations, ...movieObject],
       }))
 
       console.log("prev Title 286", prevTitle)
@@ -411,13 +423,28 @@ export default function IndexPage() {
               <span className="font-semibold">{message} </span> :
             </h1>
             <ul className="mt-8 space-y-4 list-disc">
-              {movies.map((movie, key) => {
+              {prevTitle && values.title === prevTitle.title
+                ? prevTitle.recommendations.map((movie, key) => {
+                    return (
+                      <li className="text-center" key={key}>
+                        <Item movie={movie} loading={isLoading} />
+                      </li>
+                    )
+                  })
+                : movies.map((movie, key) => {
+                    return (
+                      <li className="text-center" key={key}>
+                        <Item movie={movie} loading={isLoading} />
+                      </li>
+                    )
+                  })}
+              {/* {movies.map((movie, key) => {
                 return (
                   <li className="text-center" key={key}>
                     <Item movie={movie} loading={isLoading} />
                   </li>
                 )
-              })}
+              })} */}
             </ul>
             <div className="flex justify-center mt-6">
               <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
