@@ -29,6 +29,11 @@ interface MovieData {
   year?: string
 }
 
+interface PrevRecommendation {
+  title: string
+  recommendations: string[]
+}
+
 //TODO add another button so they can request different recommendations than current ones.
 
 export default function IndexPage() {
@@ -39,6 +44,7 @@ export default function IndexPage() {
   const [isMovie, setIsMovie] = useState(false)
   const [movies, setMovies] = useState<MovieData[]>([])
   const [message, setMessage] = useState("")
+  const [prevTitle, setPrevTitle] = useState<PrevRecommendation>()
   const { theme } = useTheme()
 
   const submit = async (e: React.MouseEvent) => {
@@ -50,10 +56,24 @@ export default function IndexPage() {
 
       let prompt: string
 
-      if (isMovie) {
-        prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+      if (prevTitle && movieTitle === prevTitle.title) {
+        const recommendedTitles = prevTitle.recommendations.join(",")
+
+        if (isMovie) {
+          prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        } else {
+          prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        }
       } else {
-        prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        if (isMovie) {
+          prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        } else {
+          prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        }
+        setPrevTitle({
+          title: movieTitle,
+          recommendations: [],
+        })
       }
 
       const response = await fetch("/api/recommendation", {
@@ -252,6 +272,17 @@ export default function IndexPage() {
       fixTitle(movieTitle)
       setMovies(movieObject)
 
+      const recommendedTitles = []
+      movieObject.forEach((movie) => {
+        recommendedTitles.push(movie.title)
+      })
+
+      setPrevTitle((prevState) => ({
+        ...prevState,
+        recommendations: [...prevState.recommendations, ...recommendedTitles],
+      }))
+
+      console.log("prev Title 286", prevTitle)
       setIsLoading(false)
     } catch (err) {
       console.error(err)
@@ -352,6 +383,7 @@ export default function IndexPage() {
             className="w-full md:max-w-2xl"
             type="text"
             required={true}
+            value={values.title}
             onChange={handleChange}
             placeholder={`${isMovie ? "Movie" : "Tv series"} you like ${
               isMovie ? "(e.g. Contact)" : "(e.g. The Office)"

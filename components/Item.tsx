@@ -61,10 +61,8 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
                       <div className="absolute z-10 p-2 font-bold text-black bg-yellow-400 left-36 md:left-64 w-fit rounded-xl">
                         {movie.imdb}
                       </div>
-                    </Link>
 
-                    <div className="relative w-full h-full ">
-                      <Link href={movie.imdbLink} className="">
+                      <div className="relative w-full h-full ">
                         <Image
                           className="w-full h-full shadow-lg rounded-3xl"
                           src={movie.image ? movie.image : "/movie.jpg"}
@@ -75,8 +73,8 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
                           // placeholder="blur"
                           alt=""
                         />
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
                   </div>
 
                   <div className="flex flex-col w-1/2 space-y-4">
