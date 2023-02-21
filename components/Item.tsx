@@ -1,8 +1,6 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { faGoogle, faImdb } from "@fortawesome/free-brands-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
