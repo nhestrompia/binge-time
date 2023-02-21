@@ -45,6 +45,8 @@ export default function IndexPage() {
   const [movies, setMovies] = useState<MovieData[]>([])
   const [message, setMessage] = useState("")
   const [prevTitle, setPrevTitle] = useState<PrevRecommendation>()
+  const [isSurprise, setIsSurprise] = useState(false)
+
   const { theme } = useTheme()
 
   const submit = async (e: React.MouseEvent) => {
@@ -53,7 +55,7 @@ export default function IndexPage() {
       const movieTitle = values.title
       setIsLoading(true)
       setMovies([])
-
+      console.log("e.currentTarget.id", e.currentTarget.id)
       let prompt: string
 
       if (prevTitle && movieTitle === prevTitle.title) {
@@ -62,25 +64,32 @@ export default function IndexPage() {
           tempTitleArr.push(movie.title)
         })
         const recommendedTitles = tempTitleArr.join(",")
-        console.log(
-          "🚀 ~ file: index.tsx:61 ~ submit ~ recommendedTitles:",
-          recommendedTitles
-        )
-
-        if (isMovie) {
-          prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        if (e.currentTarget.id === "surprise") {
+          if (isMovie) {
+            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated movies. Please recommend other movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output. `
+          } else {
+            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend tv series that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated tv series. Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output.`
+          }
         } else {
-          console.log(
-            "🚀 ~ file: index.tsx:66 ~ submit ~ recommendedTitles:",
-            recommendedTitles
-          )
-          prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend other shows than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          if (isMovie) {
+            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend other movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          } else {
+            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          }
         }
       } else {
-        if (isMovie) {
-          prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+        if (e.currentTarget.id === "surprise") {
+          if (isMovie) {
+            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend lesser known, underrated movies. Please recommend movies that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output`
+          } else {
+            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend lesser known, underrated tv series. Please recommend tv series that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output`
+          }
         } else {
-          prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          if (isMovie) {
+            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          } else {
+            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+          }
         }
         setPrevTitle({
           title: movieTitle,
@@ -137,32 +146,15 @@ export default function IndexPage() {
                 movie.title.toLowerCase() ==
                 movieInfo.originalTitle.toLowerCase()
               ) {
-                console.log("poster URL", movieInfo)
-                console.log("poster data", movieInfo.posterURLs)
                 const movieLink = movieInfo.streamingInfo.netflix[country]
                 const poster = movieInfo.posterURLs.original
-                console.log(
-                  "🚀 ~ file: index.tsx:102 ~ movieObject=movieObject.map ~ poster:",
-                  poster
-                )
 
                 const rating = movieInfo.imdbRating.toString()
-                // console.log(
-                //   "🚀 ~ file: index.tsx:102 ~ movieObject=movieObject.map ~ rating:",
-                //   rating
-                // )
 
                 const ratingArr = Array.from(rating)
-                // console.log(
-                //   "🚀 ~ file: index.tsx:105 ~ movieObject=movieObject.map ~ ratingArr:",
-                //   ratingArr
-                // )
 
                 const fixedRating = ratingArr[0] + "." + ratingArr[1]
-                // console.log(
-                //   "🚀 ~ file: index.tsx:108 ~ movieObject=movieObject.map ~ fixedRating:",
-                //   fixedRating
-                // )
+
                 return {
                   ...movie,
                   link: movieLink.link,
@@ -184,10 +176,10 @@ export default function IndexPage() {
             })
             const responseData = await movieGet.json()
             if (responseData !== undefined) {
-              console.log(
-                "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
-                responseData
-              )
+              // console.log(
+              // "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
+              // responseData
+              // )
               movieObject[i].imdb = responseData.imdbRating
               movieObject[i].image = responseData.Poster
               movieObject[i].plot = responseData.Plot
@@ -237,10 +229,10 @@ export default function IndexPage() {
           })
           const responseData = await movieGet.json()
           if (responseData !== undefined) {
-            console.log(
-              "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
-              responseData
-            )
+            // console.log(
+            // "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
+            // responseData
+            // )
             movieObject[i].imdb = responseData.imdbRating
             movieObject[i].image = responseData.Poster
             movieObject[i].plot = responseData.Plot
@@ -282,12 +274,8 @@ export default function IndexPage() {
         }
       }
       fixTitle(movieTitle)
+      // const foundMovies = movieObject.filter()
       setMovies(movieObject)
-
-      // const recommendedTitles = []
-      // movieObject.forEach((movie) => {
-      //   recommendedTitles.push(movie.title)
-      // })
 
       setPrevTitle((prevState) => ({
         ...prevState,
@@ -412,9 +400,44 @@ export default function IndexPage() {
               (option) => option.value === values.country
             )}
           />
-          <Button onClick={submit} variant="subtle">
-            Help me Binge Watch
-          </Button>
+          <div className="flex w-full gap-2">
+            <div className="w-1/2">
+              <Button
+                id="binge"
+                className="w-full"
+                onClick={submit}
+                variant="subtle"
+              >
+                Help me Binge Watch
+              </Button>
+            </div>
+            <div className="w-1/2 ">
+              <Button
+                id="surprise"
+                className="w-full"
+                onClick={submit}
+                variant="subtle"
+              >
+                Feeling Lucky
+              </Button>
+            </div>
+          </div>
+          {/* <div className="flex items-center justify-start ">
+            <div className="flex items-center h-5">
+              <input
+                onChange={handleSurprise}
+                type="checkbox"
+                checked={isSurprise}
+                className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
+                required
+              />
+            </div>
+            <div className="ml-3 text-sm">
+              <label className="font-medium text-black dark:text-white">
+                Surprise me
+              </label>
+            </div>
+          </div> */}
         </form>
         {!isLoading && movies !== undefined && movies.length > 0 && (
           <div className="w-full">
@@ -422,21 +445,26 @@ export default function IndexPage() {
               Here are some {isMovie ? "Movies" : "TV series"} similar to{" "}
               <span className="font-semibold">{message} </span> :
             </h1>
+
             <ul className="mt-8 space-y-4 list-disc">
               {prevTitle && values.title === prevTitle.title
                 ? prevTitle.recommendations.map((movie, key) => {
-                    return (
-                      <li className="text-center" key={key}>
-                        <Item movie={movie} loading={isLoading} />
-                      </li>
-                    )
+                    if (movie.imdbLink !== "") {
+                      return (
+                        <li className="text-center" key={key}>
+                          <Item movie={movie} loading={isLoading} />
+                        </li>
+                      )
+                    }
                   })
                 : movies.map((movie, key) => {
-                    return (
-                      <li className="text-center" key={key}>
-                        <Item movie={movie} loading={isLoading} />
-                      </li>
-                    )
+                    if (movie.imdbLink !== "") {
+                      return (
+                        <li className="text-center" key={key}>
+                          <Item movie={movie} loading={isLoading} />
+                        </li>
+                      )
+                    }
                   })}
               {/* {movies.map((movie, key) => {
                 return (
@@ -463,7 +491,7 @@ export default function IndexPage() {
           </div>
         )}
         {isLoading && (
-          <div className="flex justify-center w-full mt-16">
+          <div className="flex justify-center w-full mt-12">
             <span className="inline-flex items-center gap-px">
               <span className="animate-blink mx-px h-2.5 w-2.5 rounded-full dark:bg-[#c3fcf2] bg-gray-500"></span>
               <span className="animate-blink animation-delay-200 mx-px h-2.5 w-2.5 rounded-full dark:bg-[#c3fcf2] bg-gray-500"></span>
@@ -471,20 +499,6 @@ export default function IndexPage() {
             </span>
           </div>
         )}
-        {/* <div className="sticky flex justify-center top-full">
-          <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
-            <div className="flex flex-row space-x-4">
-              <p>Project</p>
-              <Link href={"https://github.com/nhestrompia/binge-time"}>
-                <Icons.gitHub className="w-4 h-4 mt-0.5  dark:text-[#3F0071]" />
-              </Link>
-              <p>made by</p>
-              <Link href={"https://twitter.com/nhestrompia"}>
-                <Icons.twitter className="w-4 h-4 mt-0.5 dark:text-[#3F0071]" />
-              </Link>
-            </div>
-          </div>
-        </div> */}
       </section>
     </Layout>
   )

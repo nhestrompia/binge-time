@@ -20,12 +20,12 @@ export default async function handler(
     body: JSON.stringify({
       model: "text-davinci-003",
       prompt: prompt,
-      temperature: 0,
+      temperature: 0.5,
       max_tokens: 300,
     }),
   })
-
   let recommendations = await response.json()
+
   let recommendationsArray = []
   recommendations = recommendations.choices[0].text.split("\n")
   console.log("1", recommendations)
