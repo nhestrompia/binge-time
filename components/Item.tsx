@@ -34,7 +34,7 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
         <HoverCard>
           <HoverCardTrigger asChild>
             <Button variant="link">
-              <h1 className="text-base font-bold leading-tight tracking-tighter underline min-w-fit md:text-xl">
+              <h1 className="text-base font-bold leading-tight tracking-tighter underline whitespace-nowrap md:min-w-fit md:text-xl">
                 {movie.title}
               </h1>
             </Button>
@@ -54,11 +54,11 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
               </div>
             </div> */}
             <div className="flex flex-col justify-center w-full ">
-              <div className="py-3 sm:max-w-xl sm:mx-auto ">
-                <div className="flex p-8 space-x-8 bg-white border border-gray-100 shadow-lg sm:rounded-3xl">
-                  <div className="w-1/2 h-fit ">
+              <div className="max-w-[340px] py-3 mx-auto md:max-w-xl ">
+                <div className="flex p-4 space-x-2 bg-white border border-gray-100 shadow-lg md:space-x-8 md:p-8 rounded-3xl">
+                  <div className="w-1/2 h-1/3 md:h-fit ">
                     <Link href={movie.imdbLink} className="">
-                      <div className="absolute z-10 p-2 font-bold text-black bg-yellow-400 left-64 w-fit rounded-xl">
+                      <div className="absolute z-10 p-2 font-bold text-black bg-yellow-400 left-36 md:left-64 w-fit rounded-xl">
                         {movie.imdb}
                       </div>
                     </Link>
@@ -81,14 +81,16 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
 
                   <div className="flex flex-col w-1/2 space-y-4">
                     <div className="flex justify-center ">
-                      <h2 className="text-3xl font-bold text-black">
+                      <h2 className="text-xl font-bold text-black md:text-3xl">
                         {movie.title}
                       </h2>
                     </div>
                     <div>
-                      <div className="text-lg text-gray-800">{movie.year}</div>
+                      <div className="text-gray-800 text-md md:text-lg">
+                        {movie.year}
+                      </div>
                     </div>
-                    <p className="overflow-y-hidden max-h-min text-gray-400 text-ellipsis ... ">
+                    <p className="overflow-y-hidden text-xs md:text-base max-h-min text-gray-400 text-ellipsis ... ">
                       {movie.plot}
                     </p>
                   </div>
@@ -98,7 +100,7 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
           </HoverCardContent>
         </HoverCard>
         {movie.link !== "" ? (
-          <div className="flex items-center gap-4 ml-4">
+          <div className="flex items-center gap-4 ml-4 whitespace-nowrap">
             <Link href={movie.link}>
               <Button className="" variant="subtle">
                 Watch now
