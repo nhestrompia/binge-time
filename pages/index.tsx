@@ -34,8 +34,6 @@ interface PrevRecommendation {
   recommendations: MovieData[]
 }
 
-//TODO add another button so they can request different recommendations than current ones.
-
 export default function IndexPage() {
   const countryRef = createRef<HTMLDivElement>()
   const [isOpen, setIsOpen] = useState(false)
@@ -45,12 +43,13 @@ export default function IndexPage() {
   const [movies, setMovies] = useState<MovieData[]>([])
   const [message, setMessage] = useState("")
   const [prevTitle, setPrevTitle] = useState<PrevRecommendation>()
-  const [isSurprise, setIsSurprise] = useState(false)
 
   const { theme } = useTheme()
 
   const submit = async (e: React.MouseEvent) => {
     e.preventDefault()
+    localStorage.setItem("country", JSON.stringify(values.country))
+
     try {
       const movieTitle = values.title
       setIsLoading(true)
@@ -66,7 +65,7 @@ export default function IndexPage() {
         const recommendedTitles = tempTitleArr.join(",")
         if (e.currentTarget.id === "surprise") {
           if (isMovie) {
-            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated movies. Please recommend other movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output. `
+            prompt = `Can you recommend me 3 feature movies similar to ${movieTitle}? Even the show title i am giving is a tv series still give me feature movie recommendations similar to it. Please recommend feature movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated feature movies. Please recommend other feature movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the feature movies' imdb rating just give their titles as output. `
           } else {
             prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend tv series that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated tv series. Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output.`
           }
@@ -289,15 +288,16 @@ export default function IndexPage() {
     }
   }
 
-  useEffect(() => {
-    setValues({ title: "", country: "ar" })
-  }, [])
+  // useEffect(() => {
+  //   setValues({ title: "", country: "ar" })
+  // }, [])
 
   const handleChange = (val: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prevState) => ({
       ...prevState,
       title: val.target.value,
     }))
+    setMovies([])
   }
 
   const fixTitle = (name) => {
@@ -311,6 +311,30 @@ export default function IndexPage() {
     console.log(words)
     setMessage(fixedTitle)
   }
+
+  useEffect(() => {
+    setMovies([])
+    setPrevTitle({
+      title: "",
+      recommendations: [],
+    })
+  }, [isMovie])
+
+  useEffect(() => {
+    const currentCountry = JSON.parse(localStorage.getItem("country"))
+
+    if (currentCountry) {
+      setValues((prevState) => ({
+        ...prevState,
+        country: currentCountry,
+      }))
+    } else {
+      setValues((prevState) => ({
+        ...prevState,
+        country: "ar",
+      }))
+    }
+  }, [])
 
   return (
     <Layout>

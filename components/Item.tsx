@@ -58,7 +58,7 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
                 <div className="flex p-4 space-x-2 bg-white border border-gray-100 shadow-lg md:space-x-8 md:p-8 rounded-3xl">
                   <div className="w-1/2 h-1/3 md:h-fit ">
                     <Link href={movie.imdbLink} className="">
-                      <div className="absolute z-10 p-2 font-semibold text-black bg-yellow-400 rounded-full left-36 md:left-60 md:top-16 w-fit">
+                      <div className="absolute p-2 font-semibold text-black bg-yellow-400 rounded-full left-36 md:left-60 md:top-16 w-fit">
                         {movie.imdb}
                       </div>
 
