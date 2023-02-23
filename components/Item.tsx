@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
@@ -44,13 +44,15 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
       <motion.div
         layout
         onClick={handleClick}
-        transition={{ layout: { duration: 1, type: "spring" } }}
+        transition={{
+          layout: { duration: 1, type: "spring" },
+          ease: "easeInOut",
+        }}
         whileHover={{ opacity: isOpen ? 1 : 0.6 }}
-        whileFocus={{ opacity: 1 }}
+        // whileFocus={{ opacity: 1 }}
         animate={{ opacity: 1 }}
         id="container"
         // whileFocus={{ opacity: 1.2 }}
-        // style={{ boxShadow: "0px 10px 30px rgba(0,0,0,0.5)" }}
         className={`${
           isOpen
             ? "z-10 w-screen h-screen  flex items-center fixed inset-0 "
@@ -60,9 +62,9 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
         <motion.div
           id="modal"
           transition={{ layout: { duration: 0.5, type: "spring" } }}
-          className={`flex p-4 space-x-2 ${
+          className={`flex p-4  space-x-2 ${
             isOpen
-              ? "bg-white z-10 max-w-[340px] py-3 mx-auto md:max-w-xl border md:p-8 border-gray-100 shadow-lg"
+              ? "bg-white  z-10 max-w-[340px] py-2.5 mx-auto md:max-w-xl border md:p-6 border-gray-100 "
               : "bg-transparent"
           }    md:space-x-8  rounded-3xl`}
         >
@@ -75,22 +77,23 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
               }
             }}
             className={`${
-              isOpen ? "w-1/2" : "w-full cursor-pointer rounded-2xl shadow-lg"
-            }  h-1/3 md:h-fit  `}
+              isOpen ? "w-1/2 " : "w-full cursor-pointer rounded-2xl "
+            }  relative bottom-5 `}
           >
             {/* <Link href={movie.imdbLink} className=""> */}
             {isOpen && (
-              <div className="relative p-2 font-semibold text-black bg-yellow-400 rounded-full left-36 md:left-48 md:top-12 w-fit">
+              <div className="relative p-1.5 md:p-2 font-semibold text-xs md:text-base text-black bg-yellow-400 rounded-full left-28 z-10 top-9 md:left-[200px] md:top-12 w-fit">
                 {movie.imdb}
               </div>
             )}
 
-            <div className="w-full h-full ">
+            <div className={`w-full   ${isOpen ? "h-[95%]" : "h-full"}  `}>
               <Image
-                className="w-full h-full shadow-lg rounded-2xl"
+                className="w-full h-full rounded-2xl"
                 src={movie.image ? movie.image : "/movie.jpg"}
-                width={290}
-                height={460}
+                width={390}
+                height={560}
+                layout="responsive"
                 // fill={true}
                 // object-fit="contain"
                 // placeholder="blur"
@@ -105,35 +108,39 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
               transition={{ layout: { duration: 1, type: "spring" } }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col justify-between w-1/2 space-y-4 "
+              className="flex flex-col w-1/2 space-y-1 md:space-y-4 justify-evenly "
             >
-              <div className="flex flex-col justify-center gap-2 ">
-                <h2 className="text-xl font-bold text-black md:text-3xl">
+              <div className="relative flex flex-col justify-center gap-2 text-center bottom-1 md:bottom-4 ">
+                <h2 className="text-lg font-bold text-black md:text-3xl">
                   {movie.title}
                 </h2>
-                <div className="text-gray-800 text-md md:text-lg">
+                <div className="text-xs text-gray-800 md:text-lg">
                   {movie.year}
                 </div>
               </div>
 
-              <p className="overflow-y-hidden text-xs md:text-base max-h-min text-gray-400 text-ellipsis ... ">
+              <p className="overflow-y-hidden text-[10px] text-center text-gray-400 md:text-base max-h-min ">
                 {movie.plot}
               </p>
               <div className="flex items-center justify-center w-full gap-4 mt-auto ">
                 {movie.link.includes("netflix") ? (
-                  <Link href={movie.link}>
+                  <Link
+                    className=" -mt-0.5 md:mt-0  w-4 h-4 md:w-6 md:h-6"
+                    target="_blank"
+                    href={movie.link}
+                  >
                     <Image
-                      className="hover:text-blue-200"
-                      src={"netflix.svg"}
+                      className=" hover:text-blue-200"
+                      src={"/netflix.svg"}
                       width={24}
                       height={24}
                       alt="netflix"
                     />
                   </Link>
                 ) : (
-                  <Link href={movie.link}>
+                  <Link target="_blank" href={movie.link}>
                     <svg
-                      className="w-6 h-6 fill-current hover:text-blue-200"
+                      className="w-4 h-4 fill-current md:w-6 md:h-6 hover:text-blue-200"
                       xmlns="http://www.w3.org/2000/svg"
                       xmlnsXlink="http://www.w3.org/1999/xlink"
                       viewBox="0 0 32 32"
@@ -172,9 +179,9 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
                     </svg>
                   </Link>
                 )}
-                <Link href={movie.imdbLink}>
+                <Link target="_blank" href={movie.imdbLink}>
                   <svg
-                    className="w-6 h-6"
+                    className="w-4 h-4 md:w-6 md:h-6"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-label="IMDb"
                     role="img"

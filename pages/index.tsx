@@ -3,6 +3,7 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { COUNTRIES } from "@/utils/countries"
+import { motion } from "framer-motion"
 import { useTheme } from "next-themes"
 
 import { siteConfig } from "@/config/site"
@@ -77,45 +78,9 @@ export default function IndexPage() {
   //   },
   // ]
 
-  // {
-  //   title: "the office",
-  //   recommendations: [
-  //     {
-  //       title: "Parks and Recreation",
-  //       link: "https://www.google.com/search?q=watch+parks+and+recreation",
-  //       imdb: "8.6",
-  //       image:
-  //         "https://m.media-amazon.com/images/M/MV5BYWNkOTg0OTMtZTcyNy00MWU1LWJhZDQtYjQzMjU1NjBhYzI2XkEyXkFqcGdeQXVyOTE4NzcwNzI@._V1_SX300.jpg",
-  //       imdbLink: "https://www.imdb.com/title/tt1266020",
-  //       plot: "The absurd antics of an Indiana town's public officials as they pursue sundry projects to make their city a better place.",
-  //       year: "2009–2015",
-  //     },
-  //     {
-  //       title: "The Good Place",
-  //       link: "https://www.google.com/search?q=watch+the+good+place",
-  //       imdb: "8.2",
-  //       image:
-  //         "https://m.media-amazon.com/images/M/MV5BYmMxNjM0NmItNGU1Mi00OGMwLTkzMzctZmE3YjU1ZDE4NmFjXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_SX300.jpg",
-  //       imdbLink: "https://www.imdb.com/title/tt4955642",
-  //       plot: "Four people and their otherworldly frienemy struggle in the afterlife to define what it means to be good.",
-  //       year: "2016–2020",
-  //     },
-  //     {
-  //       title: "Brooklyn Nine-Nine",
-  //       link: "https://www.netflix.com/title/70281562/",
-  //       imdb: "8.4",
-  //       image:
-  //         "https://image.tmdb.org/t/p/original/hgRMSOt7a1b8qyQR68vUixJPang.jpg",
-  //       imdbLink: "https://www.imdb.com/title/tt2467372",
-  //       plot: "A single-camera ensemble comedy following the lives of an eclectic group of detectives in a New York precinct, including one slacker who is forced to shape up when he gets a new boss.",
-  //       year: "2013-2021",
-  //     },
-  //   ],
-  // }
-
   const { theme } = useTheme()
 
-  const submit = async (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     localStorage.setItem("country", JSON.stringify(values.country))
 
@@ -251,13 +216,14 @@ export default function IndexPage() {
               movieObject[i].imdb = responseData.imdbRating
               movieObject[i].image = responseData.Poster
               movieObject[i].plot = responseData.Plot
-              ;(movieObject[
+              movieObject[
                 i
-              ].imdbLink = `https://www.imdb.com/title/${responseData.imdbID}`),
-                (movieObject[i].year = responseData.Year)
+              ].imdbLink = `https://www.imdb.com/title/${responseData.imdbID}`
+              if (responseData.Year !== "undefined- undefined") {
+                movieObject[i].year = responseData.Year
+              }
             } else {
-              movieObject[i].imdb = "N/A"
-              movieObject[i].image = ""
+              movieObject.splice(i, 1)
             }
 
             const newTitle = movieObject[i].title.split(/[ ,]+/)
@@ -307,10 +273,11 @@ export default function IndexPage() {
             movieObject[
               i
             ].imdbLink = `https://www.imdb.com/title/${responseData.imdbID}`
-            movieObject[i].year = responseData.Year
+            if (responseData.Year !== "undefined-undefined") {
+              movieObject[i].year = responseData.Year
+            }
           } else {
-            movieObject[i].imdb = "N/A"
-            movieObject[i].image = ""
+            movieObject.splice(i, 1)
           }
 
           const newTitle = movieObject[i].title.split(/[ ,]+/)
@@ -357,10 +324,6 @@ export default function IndexPage() {
     }
   }
 
-  // useEffect(() => {
-  //   setValues({ title: "", country: "ar" })
-  // }, [])
-
   const handleChange = (val: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prevState) => ({
       ...prevState,
@@ -382,11 +345,11 @@ export default function IndexPage() {
   }
 
   useEffect(() => {
-    // setMovies([])
-    // setPrevTitle({
-    //   title: "",
-    //   recommendations: [],
-    // })
+    setMovies([])
+    setPrevTitle({
+      title: "",
+      recommendations: [],
+    })
   }, [isMovie])
 
   useEffect(() => {
@@ -424,9 +387,8 @@ export default function IndexPage() {
           <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
             Tired of endless scrolling? Let us help you find your next
             binge-worthy show. Enter your favorite show and your country, and
-            we&apos;ll give you three tailored recommendations. Bonus:
-            we&apos;ll check if they&apos;re on Netflix in your area. Start
-            exploring now!
+            we&apos;ll give you four tailored recommendations. Bonus: we&apos;ll
+            check if they&apos;re on Netflix in your area. Start exploring now!
           </p>
           <div className="mx-auto opacity-20"></div>
 
@@ -437,45 +399,52 @@ export default function IndexPage() {
               <div className="absolute w-56 h-56 bg-pink-800 rounded-full opacity-50 left-8 -bottom-14 mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
             </div>
           </div> */}
-          {/* {theme === "light" && (
+          {theme === "light" && (
             <Image
-              className="fixed bottom-8 -z-10 opacity-30"
+              className="fixed bottom-8 -z-10 opacity-10"
               src={"cinema.svg"}
               width={600}
               height={600}
               alt="guy with popcorn"
             />
-          )} */}
+          )}
         </div>
         <label className="relative inline-flex items-center justify-center w-full -mt-4 rounded-md ">
           <input id="Toggle" type="checkbox" className="hidden peer" />
 
           <button
+            // whileHover={{ scale: isMovie ? 1.1 : 1 }}
+            // whileTap={{ scale: isMovie ? 0.88 : 1 }}
             onClick={() => setIsMovie(false)}
             className={`rounded-l-md  w-fit tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
-                ? "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
-                : "bg-black dark:bg-[#22003d] dark:text-white scale-105  text-white "
+                ? "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] scale-90 dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
+                : "bg-black dark:bg-[#22003d]  dark:text-white scale-110 text-white "
             }`}
           >
             Tv Series
           </button>
           <button
+            // whileHover={{ scale: isMovie ? 1 : 1.1 }}
+            // whileTap={{ scale: isMovie ? 1 : 0.88 }}
             onClick={() => setIsMovie(true)}
             className={`rounded-r-md tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
-                ? "bg-black dark:bg-[#22003d] dark:text-white scale-105  text-white "
-                : "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
+                ? "bg-black dark:bg-[#22003d] dark:text-white scale-110 text-white "
+                : "bg-gray-500 dark:bg-[#c1a0da] dark:hover:bg-[#8246AF] scale-90 dark:hover:text-white dark:text-[#3F0071]   hover:bg-gray-800  text-gray-50 "
             }`}
           >
             Movie
           </button>
         </label>
-        <form className="flex flex-col w-full gap-4 mt-6">
+        <form
+          onSubmit={(event) => handleSubmit(event)}
+          className="flex flex-col w-full gap-4 mt-6"
+        >
           <Input
             className="w-full md:max-w-2xl"
             type="text"
-            required={true}
+            required
             value={values.title}
             onChange={handleChange}
             placeholder={`${isMovie ? "Movie" : "Tv series"} you like ${
@@ -497,8 +466,10 @@ export default function IndexPage() {
             <div className="w-1/2">
               <Button
                 id="binge"
-                className="w-full"
-                onClick={submit}
+                disabled={isLoading ? true : false}
+                className={` w-full`}
+                // onClick={submit}
+                type="submit"
                 variant="subtle"
               >
                 Help me Binge Watch
@@ -507,8 +478,10 @@ export default function IndexPage() {
             <div className="w-1/2 ">
               <Button
                 id="surprise"
-                className="w-full"
-                onClick={submit}
+                type="submit"
+                disabled={isLoading ? true : false}
+                className={` w-full`}
+                // onClick={submit}
                 variant="subtle"
               >
                 Feeling Lucky
@@ -539,7 +512,7 @@ export default function IndexPage() {
               <span className="font-semibold">{message} </span> :
             </h1>
 
-            <div className="grid grid-cols-2 ">
+            <div className="grid grid-cols-2 mt-10">
               {prevTitle && values.title === prevTitle.title
                 ? prevTitle.recommendations.map((movie, key) => {
                     if (movie.imdbLink !== "") {
