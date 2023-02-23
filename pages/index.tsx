@@ -83,12 +83,14 @@ export default function IndexPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     localStorage.setItem("country", JSON.stringify(values.country))
+    const submitter = (e.nativeEvent as Event & { submitter: HTMLElement })
+      .submitter
+    // const buttonName = (e.nativeEvent.submitter as HTMLButtonElement).name
 
     try {
       const movieTitle = values.title
       setIsLoading(true)
       setMovies([])
-      console.log("e.currentTarget.id", e.currentTarget.id)
       let prompt: string
 
       if (prevTitle && movieTitle === prevTitle.title) {
@@ -97,7 +99,7 @@ export default function IndexPage() {
           tempTitleArr.push(movie.title)
         })
         const recommendedTitles = tempTitleArr.join(",")
-        if (e.currentTarget.id === "surprise") {
+        if (submitter.id === "surprise") {
           if (isMovie) {
             prompt = `Can you recommend me 4 feature movies similar to ${movieTitle}? Even the show title i am giving is a tv series still give me feature movie recommendations similar to it. Please recommend feature movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated feature movies. Please recommend other feature movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the feature movies' imdb rating just give their titles as output. `
           } else {
@@ -111,7 +113,7 @@ export default function IndexPage() {
           }
         }
       } else {
-        if (e.currentTarget.id === "surprise") {
+        if (submitter.id === "surprise") {
           if (isMovie) {
             prompt = `Can you recommend me 4 movies similar to ${movieTitle}? Please recommend lesser known, underrated movies. Please recommend movies that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output`
           } else {
@@ -466,6 +468,7 @@ export default function IndexPage() {
             <div className="w-1/2">
               <Button
                 id="binge"
+                name="binge"
                 disabled={isLoading ? true : false}
                 className={` w-full`}
                 // onClick={submit}
@@ -478,6 +481,7 @@ export default function IndexPage() {
             <div className="w-1/2 ">
               <Button
                 id="surprise"
+                name="surprise"
                 type="submit"
                 disabled={isLoading ? true : false}
                 className={` w-full`}
