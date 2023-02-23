@@ -40,9 +40,78 @@ export default function IndexPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [values, setValues] = useState({ title: "", country: "ar" })
   const [isMovie, setIsMovie] = useState(false)
-  const [movies, setMovies] = useState<MovieData[]>([])
+  const [movies, setMovies] = useState<MovieData[]>()
   const [message, setMessage] = useState("")
   const [prevTitle, setPrevTitle] = useState<PrevRecommendation>()
+
+  // [
+  //   {
+  //     title: "Parks and Recreation",
+  //     link: "https://www.google.com/search?q=watch+parks+and+recreation",
+  //     imdb: "8.6",
+  //     image:
+  //       "https://m.media-amazon.com/images/M/MV5BYWNkOTg0OTMtZTcyNy00MWU1LWJhZDQtYjQzMjU1NjBhYzI2XkEyXkFqcGdeQXVyOTE4NzcwNzI@._V1_SX300.jpg",
+  //     imdbLink: "https://www.imdb.com/title/tt1266020",
+  //     plot: "The absurd antics of an Indiana town's public officials as they pursue sundry projects to make their city a better place.",
+  //     year: "2009–2015",
+  //   },
+  //   {
+  //     title: "The Good Place",
+  //     link: "https://www.google.com/search?q=watch+the+good+place",
+  //     imdb: "8.2",
+  //     image:
+  //       "https://m.media-amazon.com/images/M/MV5BYmMxNjM0NmItNGU1Mi00OGMwLTkzMzctZmE3YjU1ZDE4NmFjXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_SX300.jpg",
+  //     imdbLink: "https://www.imdb.com/title/tt4955642",
+  //     plot: "Four people and their otherworldly frienemy struggle in the afterlife to define what it means to be good.",
+  //     year: "2016–2020",
+  //   },
+  //   {
+  //     title: "Brooklyn Nine-Nine",
+  //     link: "https://www.netflix.com/title/70281562/",
+  //     imdb: "8.4",
+  //     image:
+  //       "https://image.tmdb.org/t/p/original/hgRMSOt7a1b8qyQR68vUixJPang.jpg",
+  //     imdbLink: "https://www.imdb.com/title/tt2467372",
+  //     plot: "A single-camera ensemble comedy following the lives of an eclectic group of detectives in a New York precinct, including one slacker who is forced to shape up when he gets a new boss.",
+  //     year: "2013-2021",
+  //   },
+  // ]
+
+  // {
+  //   title: "the office",
+  //   recommendations: [
+  //     {
+  //       title: "Parks and Recreation",
+  //       link: "https://www.google.com/search?q=watch+parks+and+recreation",
+  //       imdb: "8.6",
+  //       image:
+  //         "https://m.media-amazon.com/images/M/MV5BYWNkOTg0OTMtZTcyNy00MWU1LWJhZDQtYjQzMjU1NjBhYzI2XkEyXkFqcGdeQXVyOTE4NzcwNzI@._V1_SX300.jpg",
+  //       imdbLink: "https://www.imdb.com/title/tt1266020",
+  //       plot: "The absurd antics of an Indiana town's public officials as they pursue sundry projects to make their city a better place.",
+  //       year: "2009–2015",
+  //     },
+  //     {
+  //       title: "The Good Place",
+  //       link: "https://www.google.com/search?q=watch+the+good+place",
+  //       imdb: "8.2",
+  //       image:
+  //         "https://m.media-amazon.com/images/M/MV5BYmMxNjM0NmItNGU1Mi00OGMwLTkzMzctZmE3YjU1ZDE4NmFjXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_SX300.jpg",
+  //       imdbLink: "https://www.imdb.com/title/tt4955642",
+  //       plot: "Four people and their otherworldly frienemy struggle in the afterlife to define what it means to be good.",
+  //       year: "2016–2020",
+  //     },
+  //     {
+  //       title: "Brooklyn Nine-Nine",
+  //       link: "https://www.netflix.com/title/70281562/",
+  //       imdb: "8.4",
+  //       image:
+  //         "https://image.tmdb.org/t/p/original/hgRMSOt7a1b8qyQR68vUixJPang.jpg",
+  //       imdbLink: "https://www.imdb.com/title/tt2467372",
+  //       plot: "A single-camera ensemble comedy following the lives of an eclectic group of detectives in a New York precinct, including one slacker who is forced to shape up when he gets a new boss.",
+  //       year: "2013-2021",
+  //     },
+  //   ],
+  // }
 
   const { theme } = useTheme()
 
@@ -65,29 +134,29 @@ export default function IndexPage() {
         const recommendedTitles = tempTitleArr.join(",")
         if (e.currentTarget.id === "surprise") {
           if (isMovie) {
-            prompt = `Can you recommend me 3 feature movies similar to ${movieTitle}? Even the show title i am giving is a tv series still give me feature movie recommendations similar to it. Please recommend feature movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated feature movies. Please recommend other feature movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the feature movies' imdb rating just give their titles as output. `
+            prompt = `Can you recommend me 4 feature movies similar to ${movieTitle}? Even the show title i am giving is a tv series still give me feature movie recommendations similar to it. Please recommend feature movies that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated feature movies. Please recommend other feature movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the feature movies' imdb rating just give their titles as output. `
           } else {
-            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend tv series that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated tv series. Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output.`
+            prompt = `Can you recommend me 4 tv series similar to ${movieTitle}? Please recommend tv series that has less than 100.000 votes on IMDb. Please recommend lesser known, underrated tv series. Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output.`
           }
         } else {
           if (isMovie) {
-            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend other movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+            prompt = `Can you recommend me 4 movies similar to ${movieTitle}? Please recommend other movies than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
           } else {
-            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+            prompt = `Can you recommend me 4 tv series similar to ${movieTitle}? Please recommend other tv series than these ones; ${recommendedTitles}. Please just give their names as a response in a numbered list, don't give their release date or year they came out`
           }
         }
       } else {
         if (e.currentTarget.id === "surprise") {
           if (isMovie) {
-            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please recommend lesser known, underrated movies. Please recommend movies that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output`
+            prompt = `Can you recommend me 4 movies similar to ${movieTitle}? Please recommend lesser known, underrated movies. Please recommend movies that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the movies' imdb rating just give their titles as output`
           } else {
-            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please recommend lesser known, underrated tv series. Please recommend tv series that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output`
+            prompt = `Can you recommend me 4 tv series similar to ${movieTitle}? Please recommend lesser known, underrated tv series. Please recommend tv series that has less than 100.000 votes on IMDb. Please just give their names as a response in a numbered list, don't give their release date or year they came out, dont give additional info about the tv series' imdb rating just give their titles as output`
           }
         } else {
           if (isMovie) {
-            prompt = `Can you recommend me 3 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+            prompt = `Can you recommend me 4 movies similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
           } else {
-            prompt = `Can you recommend me 3 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
+            prompt = `Can you recommend me 4 tv series similar to ${movieTitle}? Please just give their names as a response in a numbered list, don't give their release date or year they came out`
           }
         }
         setPrevTitle({
@@ -313,11 +382,11 @@ export default function IndexPage() {
   }
 
   useEffect(() => {
-    setMovies([])
-    setPrevTitle({
-      title: "",
-      recommendations: [],
-    })
+    // setMovies([])
+    // setPrevTitle({
+    //   title: "",
+    //   recommendations: [],
+    // })
   }, [isMovie])
 
   useEffect(() => {
@@ -470,23 +539,23 @@ export default function IndexPage() {
               <span className="font-semibold">{message} </span> :
             </h1>
 
-            <ul className="mt-8 space-y-4 list-disc">
+            <div className="grid grid-cols-2 ">
               {prevTitle && values.title === prevTitle.title
                 ? prevTitle.recommendations.map((movie, key) => {
                     if (movie.imdbLink !== "") {
                       return (
-                        <li className="text-center" key={key}>
+                        <div className="text-center" key={key}>
                           <Item movie={movie} loading={isLoading} />
-                        </li>
+                        </div>
                       )
                     }
                   })
                 : movies.map((movie, key) => {
                     if (movie.imdbLink !== "") {
                       return (
-                        <li className="text-center" key={key}>
+                        <div className="" key={key}>
                           <Item movie={movie} loading={isLoading} />
-                        </li>
+                        </div>
                       )
                     }
                   })}
@@ -497,7 +566,7 @@ export default function IndexPage() {
                   </li>
                 )
               })} */}
-            </ul>
+            </div>
             <div className="flex justify-center mt-6">
               <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
                 <div className="flex flex-row space-x-4">
