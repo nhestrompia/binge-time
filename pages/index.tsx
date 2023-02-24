@@ -3,21 +3,13 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { COUNTRIES } from "@/utils/countries"
-import { motion } from "framer-motion"
 import { useTheme } from "next-themes"
 
-import { siteConfig } from "@/config/site"
 import { CountrySelector } from "@/components/CountrySelector"
 import { Item } from "@/components/Item"
 import { Icons } from "@/components/icons"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 
 interface MovieData {
@@ -311,7 +303,6 @@ export default function IndexPage() {
         }
       }
       fixTitle(movieTitle)
-      // const foundMovies = movieObject.filter()
       setMovies(movieObject)
 
       setPrevTitle((prevState) => ({
@@ -394,13 +385,6 @@ export default function IndexPage() {
           </p>
           <div className="mx-auto opacity-20"></div>
 
-          {/* <div className="fixed flex items-center justify-center min-h-screen bottom-5 -z-10">
-            <div className="relative w-full max-w-lg">
-              <div className="absolute top-0 w-64 h-64 bg-purple-300 rounded-full opacity-50 -left-8 mix-blend-multiply filter blur-xl "></div>
-              <div className="absolute bg-yellow-300 rounded-full opacity-50 w-72 h-72 -top-36 -right-14 mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-              <div className="absolute w-56 h-56 bg-pink-800 rounded-full opacity-50 left-8 -bottom-14 mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-            </div>
-          </div> */}
           {theme === "light" && (
             <Image
               className="fixed bottom-8 -z-10 opacity-10"
@@ -415,8 +399,6 @@ export default function IndexPage() {
           <input id="Toggle" type="checkbox" className="hidden peer" />
 
           <button
-            // whileHover={{ scale: isMovie ? 1.1 : 1 }}
-            // whileTap={{ scale: isMovie ? 0.88 : 1 }}
             onClick={() => setIsMovie(false)}
             className={`rounded-l-md  w-fit tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
@@ -427,8 +409,6 @@ export default function IndexPage() {
             Tv Series
           </button>
           <button
-            // whileHover={{ scale: isMovie ? 1 : 1.1 }}
-            // whileTap={{ scale: isMovie ? 1 : 0.88 }}
             onClick={() => setIsMovie(true)}
             className={`rounded-r-md tracking-tighter leading-tight font-bold text-sm md:text-base transition ease-in-out duration-300 px-4 py-2 ${
               isMovie
@@ -492,22 +472,6 @@ export default function IndexPage() {
               </Button>
             </div>
           </div>
-          {/* <div className="flex items-center justify-start ">
-            <div className="flex items-center h-5">
-              <input
-                onChange={handleSurprise}
-                type="checkbox"
-                checked={isSurprise}
-                className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
-                required
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label className="font-medium text-black dark:text-white">
-                Surprise me
-              </label>
-            </div>
-          </div> */}
         </form>
         {!isLoading && movies !== undefined && movies.length > 0 && (
           <div className="w-full">

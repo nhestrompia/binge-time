@@ -3,14 +3,6 @@ import Image from "next/legacy/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Button } from "./ui/button"
-
 interface MovieData {
   title: string
   link?: string
@@ -39,8 +31,6 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
     return null
   } else {
     return (
-      // <motion.div className="flex items-center justify-between w-full gap-8">
-      // <motion.div className="flex flex-col justify-center w-full ">
       <motion.div
         layout
         onClick={handleClick}
@@ -80,7 +70,6 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
               isOpen ? "w-1/2 " : "w-full cursor-pointer rounded-2xl "
             }  relative bottom-5 `}
           >
-            {/* <Link href={movie.imdbLink} className=""> */}
             {isOpen && (
               <div className="relative p-1.5 md:p-2 font-semibold text-xs md:text-base text-black bg-yellow-400 rounded-full left-28 z-10 top-9 md:left-[200px] md:top-12 w-fit">
                 {movie.imdb}
@@ -94,13 +83,9 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
                 width={390}
                 height={560}
                 layout="responsive"
-                // fill={true}
-                // object-fit="contain"
-                // placeholder="blur"
                 alt=""
               />
             </div>
-            {/* </Link> */}
           </motion.div>
 
           {isOpen && (
@@ -196,9 +181,6 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
           )}
         </motion.div>
       </motion.div>
-      // </motion.div>
-
-      // </motion.div>
     )
   }
 }
