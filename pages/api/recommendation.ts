@@ -14,28 +14,35 @@ export default async function handler(
 ) {
   const { prompt } = JSON.parse(req.body)
 
-  const response = await fetch("https://api.openai.com/v1/completions", {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers,
     body: JSON.stringify({
-      model: "text-davinci-003",
-      prompt: prompt,
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      // prompt: prompt,
       temperature: 0.5,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
       max_tokens: 300,
+      n: 1,
     }),
   })
   let recommendations = await response.json()
-
+  console.log("recommendations", recommendations)
+  console.log("recommendations asdasd", recommendations.choices[0])
   let recommendationsArray = []
-  recommendations = recommendations.choices[0].text.split("\n")
-  console.log("1", recommendations)
+  recommendations = recommendations.choices[0].message.content.split("\n")
+  let recommendationData: string[] = recommendations
+  // console.log("1", recommendations)
   for (let i = 0; i < 2; i++) {
     recommendations.shift()
   }
-  console.log("3", recommendations)
+  console.log("3", typeof recommendationData)
 
   recommendations.map((i) => {
-    const newStr = i.slice(3)
+    const newStr = i.slice(2)
     console.log("neqw", newStr)
     recommendationsArray.push(newStr)
   })

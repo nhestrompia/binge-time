@@ -31,8 +31,12 @@ export default async function handler(
     options
   ).then((response) => response.json())
 
+  const checkMovie = response.d.find((movie) => {
+    return movie.l.toLowerCase() === title.toLowerCase()
+  })
+
   const response2 = await fetch(
-    `https://movie-database-alternative.p.rapidapi.com/?r=json&i=${response.d[0].id}`,
+    `https://movie-database-alternative.p.rapidapi.com/?r=json&i=${checkMovie.id}`,
     rapidOptions
   ).then((response) => response.json())
   console.log("rapid imdb check", response2)

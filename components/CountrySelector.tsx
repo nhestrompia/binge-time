@@ -81,7 +81,7 @@ export const CountrySelector = React.forwardRef<
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className="absolute z-10 w-full mt-1 text-base bg-white rounded-md shadow-lg max-h-80 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              className="absolute z-10 w-full mt-1 text-base bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
               tabIndex={-1}
               role="listbox"
               aria-labelledby="listbox-label"
@@ -103,7 +103,7 @@ export const CountrySelector = React.forwardRef<
 
               <div
                 className={
-                  "max-h-64  scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded scrollbar-thin overflow-y-scroll"
+                  "max-h-44  scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded scrollbar-thin overflow-y-scroll"
                 }
               >
                 {COUNTRIES.filter((country) =>
@@ -119,7 +119,7 @@ export const CountrySelector = React.forwardRef<
                     return (
                       <li
                         key={`${props.id}-${index}`}
-                        className="relative flex items-center py-2 pl-3 text-gray-900 transition cursor-default select-none pr-9 hover:bg-gray-50"
+                        className="relative flex items-center py-2 pl-3 text-gray-900 transition rounded-lg cursor-default select-none pr-9 hover:bg-gray-50"
                         id="listbox-option-0"
                         role="option"
                         onClick={() => {

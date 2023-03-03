@@ -1,5 +1,4 @@
 import { createRef, useEffect, useState } from "react"
-import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { COUNTRIES } from "@/utils/countries"
@@ -36,6 +35,8 @@ export default function IndexPage() {
   const [movies, setMovies] = useState<MovieData[]>()
   const [message, setMessage] = useState("")
   const [prevTitle, setPrevTitle] = useState<PrevRecommendation>()
+  const [mounted, setMounted] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   // [
   //   {
@@ -73,6 +74,7 @@ export default function IndexPage() {
   const { theme } = useTheme()
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setIsError(false)
     e.preventDefault()
     localStorage.setItem("country", JSON.stringify(values.country))
     const submitter = (e.nativeEvent as Event & { submitter: HTMLElement })
@@ -160,20 +162,25 @@ export default function IndexPage() {
           }),
         })
         const responseData = await movieGet.json()
+
+        // console.log("response data results 170", responseData.results)
         if (responseData.results.length > 0) {
           const movieInfo = responseData.results.find((movie) => {
-            return (
-              movieObject[i].title.toLowerCase() ===
-              movie.originalTitle.toLowerCase()
-            )
+            let title = movieObject[i].title.slice(1)
+
+            return title.toLowerCase() == movie.originalTitle.toLowerCase()
           })
+
           if (movieInfo !== undefined) {
             movieObject = movieObject.map((movie) => {
-              if (
-                movie.title.toLowerCase() ==
-                movieInfo.originalTitle.toLowerCase()
-              ) {
+              let title = movie.title.slice(1).toLowerCase()
+
+              if (title == movieInfo.originalTitle.toLowerCase()) {
                 const movieLink = movieInfo.streamingInfo.netflix[country]
+                console.log(
+                  "🚀 ~ file: index.tsx:180 ~ movieObject=movieObject.map ~ movieLink:",
+                  movieLink
+                )
                 const poster = movieInfo.posterURLs.original
 
                 const rating = movieInfo.imdbRating.toString()
@@ -195,18 +202,17 @@ export default function IndexPage() {
               return movie
             })
           } else {
+            let title = movieObject[i].title.slice(1).toLowerCase()
+
             const movieGet = await fetch("/api/imdb-check", {
               method: "POST",
               body: JSON.stringify({
-                title: movieObject[i].title.toLowerCase(),
+                title: title,
               }),
             })
             const responseData = await movieGet.json()
+
             if (responseData !== undefined) {
-              // console.log(
-              // "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
-              // responseData
-              // )
               movieObject[i].imdb = responseData.imdbRating
               movieObject[i].image = responseData.Poster
               movieObject[i].plot = responseData.Plot
@@ -249,18 +255,20 @@ export default function IndexPage() {
             })
           }
         } else {
+          let title = movieObject[i].title.slice(1).toLowerCase()
+
           const movieGet = await fetch("/api/imdb-check", {
             method: "POST",
             body: JSON.stringify({
-              title: movieObject[i].title.toLowerCase(),
+              title: title,
             }),
           })
           const responseData = await movieGet.json()
+          // console.log(
+          //   "🚀 ~ file: index.tsx:293 ~ handleSubmit ~ responseData:",
+          //   responseData
+          // )
           if (responseData !== undefined) {
-            // console.log(
-            // "🚀 ~ file: index.tsx:145 ~ submit ~ responseData",
-            // responseData
-            // )
             movieObject[i].imdb = responseData.imdbRating
             movieObject[i].image = responseData.Poster
             movieObject[i].plot = responseData.Plot
@@ -313,6 +321,8 @@ export default function IndexPage() {
       console.log("prev Title 286", prevTitle)
       setIsLoading(false)
     } catch (err) {
+      setIsError(true)
+      setIsLoading(false)
       console.error(err)
     }
   }
@@ -346,6 +356,10 @@ export default function IndexPage() {
   }, [isMovie])
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
     const currentCountry = JSON.parse(localStorage.getItem("country"))
 
     if (currentCountry) {
@@ -363,7 +377,7 @@ export default function IndexPage() {
 
   return (
     <Layout>
-      <Head>
+      {/* <Head>
         <title>Binge Time</title>
         <meta
           name="description"
@@ -371,28 +385,30 @@ export default function IndexPage() {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <section className="container grid items-center justify-center w-full max-w-xl gap-6 pt-4 pb-8 md:-mt-4">
+      </Head> */}
+      <div className="container grid items-center justify-center w-full max-w-xl gap-6 pt-4 pb-8 md:-mt-4">
         <div className="flex max-w-[980px] flex-col items-center gap-4">
-          <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-5xl lg:text-6xl">
             Binge Time
           </h1>
-          <p className="max-w-[700px] text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
+          <p className="max-w-[700px] leading-5 md:leading-7 text-center text-base md:text-lg text-slate-700 dark:text-slate-400 ">
             Tired of endless scrolling? Let us help you find your next
-            binge-worthy show. Enter your favorite show and your country, and
+            binge-worthy show. Enter your favorite show and your country then
             we&apos;ll give you four tailored recommendations. Bonus: we&apos;ll
             check if they&apos;re on Netflix in your area. Start exploring now!
           </p>
           <div className="mx-auto opacity-20"></div>
 
-          {theme === "light" && (
+          {mounted && theme === "light" && (
+            // <div>
             <Image
-              className="fixed bottom-8 -z-10 opacity-10"
-              src={"cinema.svg"}
+              className="hidden mt-2 md:flex md:fixed md:ml-10 -z-10 opacity-10"
+              src={"/cinema.svg"}
               width={600}
               height={600}
               alt="guy with popcorn"
             />
+            // </div>
           )}
         </div>
         <label className="relative inline-flex items-center justify-center w-full -mt-4 rounded-md ">
@@ -455,7 +471,7 @@ export default function IndexPage() {
                 type="submit"
                 variant="subtle"
               >
-                Help me Binge Watch
+                Start Binge Watch
               </Button>
             </div>
             <div className="w-1/2 ">
@@ -524,6 +540,12 @@ export default function IndexPage() {
             </div>
           </div>
         )}
+
+        {isError && (
+          <h1 className="w-full mt-6 text-base font-semibold text-center dark:text-white md:text-xl">
+            We encountered an error. Please try again
+          </h1>
+        )}
         {isLoading && (
           <div className="flex justify-center w-full mt-12">
             <span className="inline-flex items-center gap-px">
@@ -533,7 +555,7 @@ export default function IndexPage() {
             </span>
           </div>
         )}
-      </section>
+      </div>
     </Layout>
   )
 }
