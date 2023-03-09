@@ -33,9 +33,9 @@ export default async function handler(
   console.log("search", searchTitle)
 
   const response = await fetch(
-    `https://streaming-availability.p.rapidapi.com/search/pro?country=${country}&service=netflix&type=${
+    `https://streaming-availability.p.rapidapi.com/search/basic?country=${country}&service=netflix&type=${
       movie ? "movie" : "series"
-    }&order_by=original_title&page=1&desc=true&keyword=${title}&output_language=en`,
+    }&keyword=${title}&page=1&output_language=en`,
     options
   ).then((response) => response.json())
 
