@@ -78,11 +78,11 @@ export const Item: React.FC<IProps> = ({ movie, loading }) => {
 
             <div className={`w-full   ${isOpen ? "h-[95%]" : "h-full"}  `}>
               <Image
-                className="w-full h-full rounded-2xl"
+                className="w-full h-full rounded-2xl dark:filter dark:saturate-[85%] saturate-100 dark:brightness-90 brightness-100"
                 src={movie.image ? movie.image : "/movie.jpg"}
                 width={390}
                 height={560}
-                layout="responsive"
+                layout="intrinsic"
                 alt=""
               />
             </div>

@@ -177,10 +177,10 @@ export default function IndexPage() {
 
               if (title == movieInfo.originalTitle.toLowerCase()) {
                 const movieLink = movieInfo.streamingInfo.netflix[country]
-                console.log(
-                  "🚀 ~ file: index.tsx:180 ~ movieObject=movieObject.map ~ movieLink:",
-                  movieLink
-                )
+                // console.log(
+                //   "🚀 ~ file: index.tsx:180 ~ movieObject=movieObject.map ~ movieLink:",
+                //   movieLink
+                // )
                 const poster = movieInfo.posterURLs.original
 
                 const rating = movieInfo.imdbRating.toString()
@@ -318,7 +318,7 @@ export default function IndexPage() {
         recommendations: [...prevState.recommendations, ...movieObject],
       }))
 
-      console.log("prev Title 286", prevTitle)
+      // console.log("prev Title 286", prevTitle)
       setIsLoading(false)
     } catch (err) {
       setIsError(true)
@@ -338,12 +338,12 @@ export default function IndexPage() {
   const fixTitle = (name) => {
     const newTitle = name
     const words = newTitle.split(" ")
-    console.log(words)
+    // console.log(words)
     for (let i = 0; i < words.length; i++) {
       words[i] = words[i][0].toUpperCase() + words[i].substr(1)
     }
     const fixedTitle = words.join(" ")
-    console.log(words)
+    // console.log(words)
     setMessage(fixedTitle)
   }
 
