@@ -6,15 +6,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { title } = JSON.parse(req.body)
-  console.log("🚀 ~ file: movie.ts:9 ~ title", title)
-
   const RAPID_API_KEY = process.env.STREAM_API_KEY
 
   const options = {
     method: "GET",
     headers: {
       "X-RapidAPI-Key": RAPID_API_KEY,
-      "X-RapidAPI-Host": "imdb-movies-web-series-etc-search.p.rapidapi.com",
+      "X-RapidAPI-Host": "imdb-search2.p.rapidapi.com",
     },
   }
 
@@ -27,35 +25,19 @@ export default async function handler(
   }
 
   const response = await fetch(
-    `https://imdb-movies-web-series-etc-search.p.rapidapi.com/${title}.json`,
+    `https://imdb-search2.p.rapidapi.com/${title}`,
     options
   ).then((response) => response.json())
-
-  const checkMovie = response.d.find((movie) => {
-    return movie.l.toLowerCase() === title.toLowerCase()
+  const checkMovie = response.description.find((movie) => {
+    return movie["#TITLE"].toLowerCase() === title.toLowerCase()
   })
-
   const response2 = await fetch(
-    `https://movie-database-alternative.p.rapidapi.com/?r=json&i=${checkMovie.id}`,
+    `https://movie-database-alternative.p.rapidapi.com/?r=json&i=${checkMovie["#IMDB_ID"]}`,
     rapidOptions
   ).then((response) => response.json())
-  console.log("rapid imdb check", response2)
+  // console.log("rapid imdb check", response2)
 
-  console.log("imdb check", response)
+  // console.log("imdb check", response)
 
-  //   let recommendationsArray = []
-  //   recommendations = recommendations.choices[0].text.split("\n")
-  //   console.log("1", recommendations)
-  //   for (let i = 0; i < 2; i++) {
-  //     recommendations.shift()
-  //   }
-  //   console.log("3", recommendations)
-
-  //   recommendations.map((i) => {
-  //     const newStr = i.slice(3)
-  //     console.log("neqw", newStr)
-  //     recommendationsArray.push(newStr)
-  //   })
-  //   console.log(recommendationsArray)
   res.status(200).json(response2)
 }

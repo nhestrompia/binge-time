@@ -30,23 +30,17 @@ export default async function handler(
     }),
   })
   let recommendations = await response.json()
-  console.log("recommendations", recommendations)
-  console.log("recommendations asdasd", recommendations.choices[0])
+  // console.log("recommendations", recommendations)
   let recommendationsArray = []
   recommendations = recommendations.choices[0].message.content.split("\n")
   let recommendationData: string[] = recommendations
-  // console.log("1", recommendations)
-  for (let i = 0; i < 2; i++) {
-    recommendations.shift()
-  }
-  console.log("3", typeof recommendationData)
 
   recommendations.map((i) => {
     const newStr = i.slice(2)
-    console.log("neqw", newStr)
+    // console.log("neqw", newStr)
     recommendationsArray.push(newStr)
   })
-  console.log(recommendationsArray)
+  // console.log("array", recommendationsArray)
   res.status(200).json({
     recommendations: recommendationsArray,
   })

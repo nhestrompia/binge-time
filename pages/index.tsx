@@ -1,4 +1,5 @@
 import { createRef, useEffect, useState } from "react"
+import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { COUNTRIES } from "@/utils/countries"
@@ -133,10 +134,9 @@ export default function IndexPage() {
         }),
       })
       const recommendationData = await response.json()
-
       let movieObject = []
 
-      const newMovies = recommendationData.recommendations.map((movie) => {
+      recommendationData.recommendations.map((movie) => {
         let tempObject = {
           title: movie,
           link: "",
@@ -162,25 +162,19 @@ export default function IndexPage() {
           }),
         })
         const responseData = await movieGet.json()
-
         // console.log("response data results 170", responseData.results)
-        if (responseData.results.length > 0) {
-          const movieInfo = responseData.results.find((movie) => {
+        if (responseData?.result?.length > 0) {
+          const movieInfo = responseData.result.find((movie) => {
             let title = movieObject[i].title.slice(1)
 
             return title.toLowerCase() == movie.originalTitle.toLowerCase()
           })
-
           if (movieInfo !== undefined) {
             movieObject = movieObject.map((movie) => {
               let title = movie.title.slice(1).toLowerCase()
 
               if (title == movieInfo.originalTitle.toLowerCase()) {
-                const movieLink = movieInfo.streamingInfo.netflix[country]
-                // console.log(
-                //   "🚀 ~ file: index.tsx:180 ~ movieObject=movieObject.map ~ movieLink:",
-                //   movieLink
-                // )
+                const movieLink = movieInfo.streamingInfo[country].netflix[0]
                 const poster = movieInfo.posterURLs.original
 
                 const rating = movieInfo.imdbRating.toString()
@@ -264,10 +258,6 @@ export default function IndexPage() {
             }),
           })
           const responseData = await movieGet.json()
-          // console.log(
-          //   "🚀 ~ file: index.tsx:293 ~ handleSubmit ~ responseData:",
-          //   responseData
-          // )
           if (responseData !== undefined) {
             movieObject[i].imdb = responseData.imdbRating
             movieObject[i].image = responseData.Poster
@@ -377,15 +367,15 @@ export default function IndexPage() {
 
   return (
     <Layout>
-      {/* <Head>
+      <Head>
         <title>Binge Time</title>
         <meta
           name="description"
           content="AI powered movie/tv series recommendation"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
+        <link rel="icon" href="/favicon.png" />
+      </Head>
       <div className="container grid items-center justify-center w-full max-w-xl gap-6 pt-4 pb-8 md:-mt-4">
         <div className="flex max-w-[980px] flex-col items-center gap-4">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-5xl lg:text-6xl">
@@ -524,6 +514,11 @@ export default function IndexPage() {
                 )
               })} */}
             </div>
+            {isError && (
+              <h1 className="w-full mt-6 text-base font-semibold text-center dark:text-white md:text-xl">
+                We encountered an error. Please try again
+              </h1>
+            )}
             <div className="flex justify-center mt-6">
               <div className="flex items-center justify-center px-4 py-2 space-x-2 text-sm text-gray-600 transition-colors bg-white border border-gray-300 rounded-full shadow-md max-w-fit hover:bg-gray-100">
                 <div className="flex flex-row space-x-4">
@@ -541,11 +536,6 @@ export default function IndexPage() {
           </div>
         )}
 
-        {isError && (
-          <h1 className="w-full mt-6 text-base font-semibold text-center dark:text-white md:text-xl">
-            We encountered an error. Please try again
-          </h1>
-        )}
         {isLoading && (
           <div className="flex justify-center w-full mt-12">
             <span className="inline-flex items-center gap-px">

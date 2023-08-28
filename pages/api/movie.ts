@@ -6,7 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { title, country, movie } = JSON.parse(req.body)
-  console.log("🚀 ~ file: movie.ts:9 ~ title", title, country, movie)
 
   const STREAM_API_KEY = process.env.STREAM_API_KEY
 
@@ -30,29 +29,14 @@ export default async function handler(
 
   const searchTitle = newArr.join("").toLowerCase()
 
-  console.log("search", searchTitle)
+  // console.log("search", searchTitle)
 
   const response = await fetch(
-    `https://streaming-availability.p.rapidapi.com/search/basic?country=${country}&service=netflix&type=${
+    `https://streaming-availability.p.rapidapi.com/v2/search/basic?country=${country}&service=netflix&type=${
       movie ? "movie" : "series"
     }&keyword=${title}&page=1&output_language=en`,
     options
   ).then((response) => response.json())
 
-  console.log("response", response)
-  //   let recommendationsArray = []
-  //   recommendations = recommendations.choices[0].text.split("\n")
-  //   console.log("1", recommendations)
-  //   for (let i = 0; i < 2; i++) {
-  //     recommendations.shift()
-  //   }
-  //   console.log("3", recommendations)
-
-  //   recommendations.map((i) => {
-  //     const newStr = i.slice(3)
-  //     console.log("neqw", newStr)
-  //     recommendationsArray.push(newStr)
-  //   })
-  //   console.log(recommendationsArray)
   res.status(200).json(response)
 }
